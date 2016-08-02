@@ -1,0 +1,14 @@
+body{
+    margin:0px;
+}
+
+.nav{
+    @include mixin-nav-bar(#CF4646, #fff, 55px, 18px);
+}
+
+main section{
+    h1{
+        font-size: 96px;
+        color: #b3b3b3;
+    }
+}
