@@ -1,7 +1,8 @@
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
     concat = require('gulp-concat'),
-    uglify = require('gulp-uglify');
+    uglify = require('gulp-uglify'),
+    imagemin = require('gulp-imagemin');
 
 gulp.task('default', ['sass', 'js']);
 
@@ -19,3 +20,9 @@ gulp.task('js', function () {
     .pipe(uglify())
     .pipe(gulp.dest('assets/js'));
 });
+
+gulp.task('img', () =>
+    gulp.src('assets/src/img/*')
+        .pipe(imagemin())
+        .pipe(gulp.dest('assets/img'))
+);
