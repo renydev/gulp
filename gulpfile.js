@@ -3,9 +3,12 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
     imagemin = require('gulp-imagemin'),
-    htmlmin = require('gulp-htmlmin');
+    htmlmin = require('gulp-htmlmin'),
+    browserSync = require('browser-sync');
+    //gls = require('gulp-live-server');
+    
 
-gulp.task('default', ['sass', 'js', 'img', 'html', 'watch']);
+gulp.task('default', ['sass', 'js', 'img', 'html', 'watch', 'browser-sync']);
 
 gulp.task('sass', function () {
  return gulp.src('assets/src/sass/**/*.scss')
@@ -40,3 +43,19 @@ gulp.task('watch', function() {
     gulp.watch('assets/src/img/*', ['img']);
     gulp.watch('_html/*.html', ['html']);
 });
+
+
+//o browser sync não funcionou direito no CLOUD9, mas acho que dá pra usar via preview
+gulp.task('browser-sync', function() {
+    browserSync({
+        // You can use wildcards in here.
+        files: 'index.html, assets/css/style.min.css',
+        // We can pick port 8081 or 8082, if you are more of a 2's kind of guy, go for the 8082. Highly recommended.
+        port: 8082
+    });
+});
+
+//gulp.task('serve', function(){
+//    var server  =   gls.static('./', 8081);
+//    server.start();
+//});
