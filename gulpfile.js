@@ -4,11 +4,13 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     imagemin = require('gulp-imagemin'),
     htmlmin = require('gulp-htmlmin'),
-    browserSync = require('browser-sync');
+    browserSync = require('browser-sync'),
+    jshint = require('gulp-jshint'),
+    stylish = require('jshint-stylish');
     //gls = require('gulp-live-server');
     
 
-gulp.task('default', ['sass', 'js', 'img', 'html', 'watch', 'browser-sync']);
+gulp.task('default', ['sass', 'js', 'img', 'html', 'lint', 'watch']);
 
 gulp.task('sass', function () {
  return gulp.src('assets/src/sass/**/*.scss')
@@ -44,6 +46,11 @@ gulp.task('watch', function() {
     gulp.watch('_html/*.html', ['html']);
 });
 
+gulp.task('lint', function() {
+  return gulp.src('assets/src/js/*.js')
+    .pipe(jshint())
+    .pipe(jshint.reporter(stylish));
+});
 
 //o browser sync não funcionou direito no CLOUD9, mas acho que dá pra usar via preview
 gulp.task('browser-sync', function() {
