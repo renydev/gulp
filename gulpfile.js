@@ -1,68 +1,105 @@
-var gulp = require('gulp'),
-    sass = require('gulp-sass'),
-    concat = require('gulp-concat'),
-    uglify = require('gulp-uglify'),
-    imagemin = require('gulp-imagemin'),
-    htmlmin = require('gulp-htmlmin'),
-    browserSync = require('browser-sync'),
-    jshint = require('gulp-jshint'),
-    stylish = require('jshint-stylish');
-    //gls = require('gulp-live-server');
-    
+const { gulp,
+	      watch, 
+				src, 
+				dest, 
+				series, 
+				parallel } = require('gulp')
+const sass         = require('gulp-sass')
+const uglifycss    = require('gulp-uglifycss')
+const pug          = require('gulp-pug')
+const clear        = require('clear')
+const postcss      = require('gulp-postcss')
+const autoprefixer = require('autoprefixer')
+const del          = require('del')
+const browserSync  = require('browser-sync');
+// folders
+const origin = 'src/'
+const output = 'dist/'
+const server = browserSync.create();
 
-gulp.task('default', ['sass', 'js', 'img', 'html', 'lint', 'watch']);
+function clean(cb) {
+	clear()
+	// del.sync([origin + 'dist'])
+  console.log('Clearing terminal.')
+  cb()
+}
 
-gulp.task('sass', function () {
- return gulp.src('assets/src/sass/**/*.scss')
-   .pipe(concat('style.min.css'))
-   .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-   .pipe(gulp.dest('assets/css'));
-});
 
-gulp.task('js', function () {
-  // returns a Node.js stream, but no handling of error messages
-  return gulp.src('assets/src/js/**/*.js')
-    .pipe(concat('script.min.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('assets/js'));
-});
+function html() {
+	// body omitted
+	console.log('Puggifying HTML')
+	return src(origin + 'html/**')
+	      .pipe(pug())
+	      .pipe(dest(output))
+}
+function css(done) {
+	// body omitted
+	console.log('Sass Transpile')
+	return src(origin + 'styles/sass/**/*.sass')
+		.pipe(sass().on('error', sass.logError))
+		.pipe(postcss([
+      autoprefixer(
+				{ 
+					browsers: [
+						'last 2 versions', 
+						'> 2%',
+						'firefox > = 4',
+						'safari 7 ',
+						'safari 8 ',
+						'IE 8 ',
+						'IE 9 ',
+						'IE 10 ',
+						'IE 11 ',
+					] 
+				}
+		)]))
+		.pipe(uglifycss({"maxLineLen": 80,"uglyComments": true}))
+		.pipe(dest(output + 'css'))
 
-gulp.task('img', () =>
-    gulp.src('assets/src/img/*')
-        .pipe(imagemin())
-        .pipe(gulp.dest('assets/img'))
-);
+}
+function typescript(done) {
+	// body omitted
+	console.log('jsTranspile')
+	done()
+}
 
-gulp.task('html', function() {
-  return gulp.src('_html/*.html')
-    .pipe(htmlmin({collapseWhitespace: true}))
-    .pipe(gulp.dest('.'))
-});
+function publish(cb) {
+	// body omitted
+	console.log('publish')
+	cb()
+}
 
-gulp.task('watch', function() {
-    gulp.watch('assets/src/sass/**/*.scss', ['sass']);
-    gulp.watch('assets/src/js/**/*.js', ['js']);
-    gulp.watch('assets/src/img/*', ['img']);
-    gulp.watch('_html/*.html', ['html']);
-});
+function watch_files() {
 
-gulp.task('lint', function() {
-  return gulp.src('assets/src/js/*.js')
-    .pipe(jshint())
-    .pipe(jshint.reporter(stylish));
-});
+  // html changes
+  watch(origin + 'html/**/*', series(html, reload))
 
-//o browser sync não funcionou direito no CLOUD9, mas acho que dá pra usar via preview
-gulp.task('browser-sync', function() {
-    browserSync({
-        // You can use wildcards in here.
-        files: 'index.html, assets/css/style.min.css',
-        // We can pick port 8081 or 8082, if you are more of a 2's kind of guy, go for the 8082. Highly recommended.
-        port: 8082
-    });
-});
+  // css changes
+  watch(origin + 'styles/**/*', series(css, reload))
 
-//gulp.task('serve', function(){
-//    var server  =   gls.static('./', 8081);
-//    server.start();
-//});
+  // js changes
+  watch(origin + 'scripts/**/*', series(typescript, reload))
+}
+
+function reload(done) {
+	server.reload();
+	done()
+}
+
+function browser_sync() {
+  server.init({
+    server: {
+      baseDir: output
+    }
+  })
+}
+
+exports.default = parallel(
+	clean,
+	parallel(watch_files, browser_sync), 	 
+)
+
+exports.clear = clean
+exports.css = css
+exports.html = html
+exports.javascript = typescript

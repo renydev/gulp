@@ -1,19 +1,32 @@
 {
-  "name": "project_renato",
+  "name": "timeline",
   "version": "1.0.0",
-  "title": "Projeto Renato",
+  "description": "Timeline baseado em exemplos do how to ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "timeline",
+    "css",
+    "how",
+    "to"
+  ],
+  "author": "RENATO MULLER VENTURA",
+  "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^2.14.0",
-    "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.0",
-    "gulp-htmlmin": "^2.0.0",
-    "gulp-imagemin": "^3.0.2",
-    "gulp-jshint": "^2.0.1",
-    "gulp-live-server": "0.0.30",
-    "gulp-minify-html-2": "^1.0.0",
-    "gulp-sass": "^2.3.2",
-    "gulp-uglify": "^2.0.0",
-    "jshint": "^2.9.2",
-    "jshint-stylish": "^2.2.0"
+    "autoprefixer": "^9.5.1",
+    "browser-sync": "^2.26.5",
+    "clear": "^0.1.0",
+    "css-mqpacker": "^7.0.0",
+    "cssnano": "^4.1.10",
+    "del": "^4.1.1",
+    "gulp": "^4.0.2",
+    "gulp-livereload": "^4.0.1",
+    "gulp-postcss": "^8.0.0",
+    "gulp-pug": "^4.0.1",
+    "gulp-sass": "^4.0.2",
+    "gulp-uglifycss": "^1.1.0",
+    "postcss-assets": "^5.0.0"
   }
 }
